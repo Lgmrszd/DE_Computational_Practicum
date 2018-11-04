@@ -1,42 +1,37 @@
 import tkinter as tk
 
-root = tk.Tk()
 
-left_pane = tk.Frame(root)
-params_frame = tk.Frame(left_pane)
-params_labels = tk.Frame(params_frame)
-params_entries = tk.Frame(params_frame)
+class MainWindow(tk.Tk):
+    def put_entry(self, row, name, label):
+        self.widgets[name+"_label"] = tk.Label(self.params_frame, text=label, font=(None, 20))
+        self.widgets[name+"_label"].grid(row=row, column=0, sticky="W")
+        self.widgets[name+"_entry"] = tk.Entry(self.params_frame)
+        self.widgets[name+"_entry"].grid(row=row, column=1)
 
-# x0_frame = tk.Frame(params_frame)
-x0_lbl = tk.Label(params_labels, text="x\N{SUBSCRIPT ZERO}:")
-x0_lbl.pack(side=tk.TOP)
-x0_entry = tk.Entry(params_entries)
-x0_entry.pack(side=tk.TOP)
-# x0_frame.pack(side=tk.TOP)
+    def get_entry(self, name):
+        return self.widgets[name+"_entry"]
 
-# y0_frame = tk.Frame(params_frame)
-y0_lbl = tk.Label(params_labels, text=u"y\N{SUBSCRIPT ZERO}:")
-y0_lbl.pack(side=tk.TOP)
-y0_entry = tk.Entry(params_entries)
-y0_entry.pack(side=tk.TOP)
-# y0_frame.pack(side=tk.TOP)
+    def apply_button_callback(self):
+        print("Test")
 
-# x_frame = tk.Frame(params_frame)
-x_lbl = tk.Label(params_labels, text="X:")
-x_lbl.pack(side=tk.TOP)
-x_entry = tk.Entry(params_entries)
-x_entry.pack(side=tk.TOP)
-# x_frame.pack(side=tk.TOP)
+    def __init__(self):
+        super().__init__()
 
-params_labels.pack(side=tk.LEFT)
-params_entries.pack(side=tk.LEFT)
+        self.widgets = {}
 
-apply_bt = tk.Button(left_pane, text="Apply")
-apply_bt.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
+        self.left_pane = tk.Frame(self)
+        self.params_frame = tk.Frame(self.left_pane)
+        self.put_entry(0, "x0", u"x\N{SUBSCRIPT ZERO}:")
+        self.put_entry(1, "y0", u"y\N{SUBSCRIPT ZERO}:")
+        self.put_entry(2, "x", "X:")
+        self.put_entry(3, "step", "Step:")
+        self.apply_bt = tk.Button(self.left_pane, text="Apply", command=self.apply_button_callback)
+        self.apply_bt.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
+        self.params_frame.pack(side=tk.LEFT)
+        self.left_pane.pack(side=tk.LEFT, fill=tk.Y)
+        # self.configure(background='red')
 
-params_frame.pack(side=tk.LEFT)
-left_pane.pack(side=tk.LEFT, fill=tk.Y)
-left_pane.configure(background='black')
-root.configure(background='red')
+
+root = MainWindow()
 root.mainloop()
 
