@@ -54,8 +54,48 @@ def euler(x0, y0, x, grid):
 
 
 def imp_euler(x0, y0, x, grid):
-    return euler(x0, y0, x, grid)
+    c = (-2*e**(x0**2/4)/y0**0.5) - (2*e**(x0**2/4))
+    step = (x-x0)/grid
+    x_range = [x0+i*step for i in range(grid+1)]
+    y_range = [y0]
+    i = 1
+    current_y = y0
+    not_overflow = True
+    while i <= grid:
+        try:
+            current_y = current_y + step*func(x_range[i-1] + step/2, current_y + (step/2)*func(x_range[i-1], current_y))
+            y_range.append(current_y)
+        except OverflowError:
+            not_overflow = False
+            current_y = exact_func(x_range[i], c)
+            y_range.append(current_y)
+        i += 1
+    y_array = np.array(y_range, float)
+    x_array = np.array(x_range[:len(y_array)], float)
+    return x_array, y_array, not not_overflow
 
 
 def r_k(x0, y0, x, grid):
-    return euler(x0, y0, x, grid)
+    c = (-2*e**(x0**2/4)/y0**0.5) - (2*e**(x0**2/4))
+    step = (x-x0)/grid
+    x_range = [x0+i*step for i in range(grid+1)]
+    y_range = [y0]
+    i = 1
+    current_y = y0
+    not_overflow = True
+    while i <= grid:
+        try:
+            k1 = func(x_range[i-1], current_y)
+            k2 = func(x_range[i-1]+step/2, current_y+(step/2)*k1)
+            k3 = func(x_range[i-1]+step/2, current_y+(step/2)*k2)
+            k4 = func(x_range[i-1]+step, current_y+step*k3)
+            current_y = current_y + (step/6)*(k1 + 2*k2 + 2*k3 + k4)
+            y_range.append(current_y)
+        except OverflowError:
+            not_overflow = False
+            current_y = exact_func(x_range[i], c)
+            y_range.append(current_y)
+        i += 1
+    y_array = np.array(y_range, float)
+    x_array = np.array(x_range[:len(y_array)], float)
+    return x_array, y_array, not not_overflow
